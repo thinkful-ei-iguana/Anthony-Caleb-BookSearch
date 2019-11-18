@@ -15,7 +15,7 @@ class App extends React.Component {
       searchTerm: "",
       printFilter: "",
       bookFilterType: "",
-      results: [],
+      results: null,
       loading: false,
       error: null
     };
@@ -33,11 +33,12 @@ class App extends React.Component {
     this.setState({ bookFilterType: newVal });
   }
 
+  setResults(newResults) {
+    this.setState({results: newResults});
+  }
+
   onSubmit(e) {
     e.preventDefault();
-    console.log(
-      `${this.searchTerm}, with these filters ${this.printFilter}, ${this.bookFilterType}`
-    );
 
     const BASE_URL = "https://www.googleapis.com/books/v1/volumes?q=";
     const parameters = `searchTerm: "${this.state.searchTerm}", printFilter: "${this.state.printFilter}", bookFilter: "${this.state.bookFilterType}"`;
@@ -50,11 +51,16 @@ class App extends React.Component {
           throw new Error(res.statusText);
         }
       })
-      .then(data => console.log(data))
+      .then(data => this.setResults(data))
       .catch(e => console.log(e));
   }
 
   render() {
+    let renderResults = this.state.results
+      ? <Results state={this.state} />
+      : "";
+
+    
     return (
       <div className="App">
         <Header />
@@ -65,7 +71,7 @@ class App extends React.Component {
           setType={this.setTypeFilter}
           onSubmit={this.onSubmit}
         />
-        {/* <Results state={this.state} /> */}
+        {renderResults}
       </div>
     );
   }
