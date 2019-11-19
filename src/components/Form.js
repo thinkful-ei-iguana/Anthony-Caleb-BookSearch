@@ -2,14 +2,15 @@ import React from "react";
 
 export default class Form extends React.Component {
   render() {
-    console.log(this.props.state);
     return (
       <main>
         <form>
-          <label>Search Books</label>
           <input
             type="text"
+            className="searchInput"
             onChange={e => this.props.setSearch(e.target.value)}
+            required
+            placeholder="Search Books"
           />
           <label className="printFilterLabel">Print Type</label>
           <select
@@ -25,14 +26,30 @@ export default class Form extends React.Component {
             className="typeFilter"
             onChange={e => this.props.setType(e.target.value)}
           >
-            <option value="">No filter</option>
-            <option value="ebooks">eBooks</option>
-            <option value="free-ebooks">Free eBooks</option>
-            <option value="full">Full</option>
-            <option value="paid-ebooks">Paid eBooks</option>
-            <option value="partial">Partial eBooks</option>
+            <option required value="">
+              No filter
+            </option>
+            <option required value="ebooks">
+              eBooks
+            </option>
+            <option required value="free-ebooks">
+              Free eBooks
+            </option>
+            <option required value="full">
+              Full
+            </option>
+            <option required value="paid-ebooks">
+              Paid eBooks
+            </option>
+            <option required value="partial">
+              Partial eBooks
+            </option>
           </select>
-          <button type="submit" onClick={this.props.onSubmit}>
+          <button
+            type="submit"
+            className="submitBtn"
+            onClick={this.props.onSubmit}
+          >
             search
           </button>
         </form>

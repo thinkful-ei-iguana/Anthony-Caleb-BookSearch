@@ -2,6 +2,10 @@ import React from "react";
 
 export default class Header extends React.Component {
   render() {
-    return <header>Google Book Search</header>;
+    return (
+      <header>
+        <h1>Google Book Search</h1>
+      </header>
+    );
   }
 }

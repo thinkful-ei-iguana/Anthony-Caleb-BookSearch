@@ -13,7 +13,7 @@ class App extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.state = {
       searchTerm: "",
-      printFilter: "",
+      printFilter: "all",
       bookFilterType: "",
       results: null,
       loading: false,
@@ -34,36 +34,44 @@ class App extends React.Component {
   }
 
   setResults(newResults) {
-    this.setState({results: newResults});
+    this.setState({ results: newResults });
   }
 
   onSubmit(e) {
     e.preventDefault();
+    console.log(this.state.printFilter);
+    const BASE_URL = "https://www.googleapis.com/books/v1/volumes?";
+    const filter =
+      this.state.bookFilterType.length > 0
+        ? `filter=${this.state.bookFilterType}&`
+        : "";
+    const printType = `printType=${this.state.printFilter}`;
+    const q = `q=${this.state.searchTerm}`;
 
-    const BASE_URL = "https://www.googleapis.com/books/v1/volumes?q=";
-    const parameters = `searchTerm: "${this.state.searchTerm}", printFilter: "${this.state.printFilter}", bookFilter: "${this.state.bookFilterType}"`;
-
-    fetch(`${BASE_URL}{${parameters}}`)
+    fetch(`${BASE_URL}${printType}&${filter}${q}`)
       .then(res => {
         if (res.ok) {
           return res.json();
         } else {
+          console.log("going to else");
           throw new Error(res.statusText);
         }
       })
       .then(data => this.setResults(data))
-      .catch(e => console.log(e));
+      .catch(e => this.setState({ error: e.message }));
   }
 
   render() {
-    let renderResults = this.state.results
-      ? <Results state={this.state} />
-      : "";
+    let renderResults = this.state.results ? (
+      <Results state={this.state} />
+    ) : (
+      ""
+    );
 
-    
     return (
       <div className="App">
         <Header />
+        <h5>{this.state.error}</h5>
         <Form
           state={this.state}
           setSearch={this.setSearchTerm}
